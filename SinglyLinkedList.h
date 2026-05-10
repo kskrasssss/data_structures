@@ -69,5 +69,62 @@ public:
         }
         os << " ]";
         return os;
+
+
+
+        // Вставка/видалення за індексом
+
+        void insertAt(int index, const T & value) {
+            if (index < 0 || index > listSize)
+                throw std::out_of_range("insertAt: index " + std::to_string(index) + " is out of range");
+            if (index == 0) { pushFront(value); return; }
+
+            auto current = head;
+            for (int i = 0; i < index - 1; i++) current = current->next;
+
+            auto newNode = std::make_shared<Node<T>>(value);
+            newNode->next = current->next;
+            current->next = newNode;
+            listSize++;
+        }
+
+        void removeAt(int index) {
+            if (index < 0 || index >= listSize)
+                throw std::out_of_range("removeAt: index " + std::to_string(index) + " is out of range");
+            if (index == 0) { popFront(); return; }
+
+            auto current = head;
+            for (int i = 0; i < index - 1; i++) current = current->next;
+            current->next = current->next->next;
+            listSize--;
+        }
+
+        // Доступ за індексом
+
+        T& at(int index) {
+            if (index < 0 || index >= listSize)
+                throw std::out_of_range("at: index " + std::to_string(index) + " is out of range");
+            auto current = head;
+            for (int i = 0; i < index; i++) current = current->next;
+            return current->data;
+        }
+
+        // Пошук
+
+        int find(const T & value) const {
+            auto current = head;
+            int index = 0;
+            while (current) {
+                if (current->data == value) return index;
+                current = current->next;
+                index++;
+            }
+            return -1;
+        }
+
+        // Інфо
+
+        int size() const { return listSize; }
+        bool isEmpty() const { return listSize == 0; }
     }
 };
